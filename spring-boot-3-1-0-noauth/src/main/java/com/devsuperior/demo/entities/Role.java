@@ -2,15 +2,18 @@ package com.devsuperior.demo.entities;
 
 import java.util.Objects;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+//@SuppressWarnings("serial") // para não mostrar as notificações esse especialmente no caso do GrantedAuthority, apesar de não mostrar nas ultimas att's
 @Entity
 @Table(name = "tb_role")
-public class Role {
+public class Role implements GrantedAuthority{
 
     // attribute
     @Id
@@ -36,6 +39,7 @@ public class Role {
         this.id = id;
     }
 
+    @Override
     public String getAuthority() {
         return authority;
     }

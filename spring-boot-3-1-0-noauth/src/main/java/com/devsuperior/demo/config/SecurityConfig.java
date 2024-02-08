@@ -1,7 +1,10 @@
 package com.devsuperior.demo.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +22,17 @@ public class SecurityConfig {
     }
 
     @Bean
+	@Profile("test")
+	@Order(1)
+	public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
+
+		http.securityMatcher(PathRequest.toH2Console()).csrf(csrf -> csrf.disable())
+				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
+		return http.build();
+	}
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // desabilita a proteção contra csrf que é um ataque quando grava dados na seção. Gera vulnerabilidade para acessar as informações de forma indevida
         // API REST não guarda state em seção, então não precisa preocupar com isto
@@ -27,4 +41,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http.build();
     }
+
+    
 }

@@ -66,11 +66,13 @@ public class AuthorizationServerConfig {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+
 // @Bean transforma o objeto em componente que poderá ser injetado em outros lugares
 	@Bean
 	@Order(2)
 	public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
 
+		// Configurando o authorization server para funcionar juntamente com Spring Security
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
 		// @formatter:off
@@ -94,6 +96,7 @@ public class AuthorizationServerConfig {
 	public OAuth2AuthorizationConsentService oAuth2AuthorizationConsentService() {
 		return new InMemoryOAuth2AuthorizationConsentService();
 	}
+
 	// PasswordEncoder é um genérico do BCryptPasswordEncoder
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -168,6 +171,7 @@ public class AuthorizationServerConfig {
 		return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
 	}
 
+	// Config do algoritmo RSA  para gerar a chave do token, embaralhar o token
 	@Bean
 	public JWKSource<SecurityContext> jwkSource() {
 		RSAKey rsaKey = generateRsa();
